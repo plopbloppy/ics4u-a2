@@ -1,5 +1,37 @@
 const form = document.getElementById("cubic-form") as HTMLFormElement;
 
+//Roots
+let x1: any;
+let x2: any;
+let x3: any;
+
+// grid components
+const canvas = document.getElementById("graph") as HTMLCanvasElement;
+const ctx = canvas.getContext("2d");
+
+if (ctx) {
+    ctx.beginPath();
+    for (let i = 5; i <= canvas.width; i += 35) {
+        ctx.moveTo(i, 5);
+        ctx.lineTo(i, canvas.height);
+        ctx.moveTo(5, i);
+        ctx.lineTo(canvas.height, i);
+        ctx.strokeStyle = "#AAAAAA";
+        ctx.stroke();
+    }
+}
+
+function drawFunction(x1: any, x2: any, x3: any, yInt: any) {
+    if (ctx) {
+        ctx.translate(canvas.width/2, canvas.height/2);
+        ctx.beginPath();
+        ctx.moveTo(0, yInt);
+        ctx.bezierCurveTo(x1, 0, 180, 10, x2, 0);
+        ctx.strokeStyle = "#362c47";
+        ctx.stroke();
+    }
+}
+
 form?.addEventListener("submit", (event) => {
     event.preventDefault();
 
@@ -13,11 +45,6 @@ form?.addEventListener("submit", (event) => {
     const p = (3 * a * c - b * b) / (3 * a * a);
     const q = (27 * a * a * d - 9 * a * b * c + 2 * b ** 3) / (27 * a ** 3);
     const discriminant = (q / 2) ** 2 + (p / 3) ** 3;
-
-    //Roots
-    let x1;
-    let x2;
-    let x3;
 
     if (discriminant < 0) {
         const k = 2 * Math.sqrt(-p / 3);
@@ -47,33 +74,5 @@ form?.addEventListener("submit", (event) => {
             (document.getElementById("result") as HTMLInputElement).value = `x1=${x1}, x2=${x1}, x3=${x3}`;
         }
     }
+    drawFunction(x1, x2, x3, d);
 })
-
-// grid components
-const canvas = document.getElementById("graph") as HTMLCanvasElement;
-const ctx = canvas.getContext("2d");
-
-if (ctx) {
-    ctx.beginPath();
-    for (let i = 5; i <= 400; i += 30) {
-        ctx.moveTo(i, 5);
-        ctx.lineTo(i, 400);
-        ctx.moveTo(5, i);
-        ctx.lineTo(400, i);
-        ctx.strokeStyle = "#FFFFFF";
-        ctx.stroke();
-    }
-}
-
-// function drawFunction() {
-//     if (ctx) {
-//         ctx.beginPath();
-//         ctx.moveTo(50, 100);
-//         ctx.lineTo(150, 120);
-//         ctx.lineTo(250, 80);
-//         ctx.lineTo(350, 140);
-//         ctx.stroke();
-//     }
-// }
-
-// drawFunction();
