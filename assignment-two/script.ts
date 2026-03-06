@@ -1,8 +1,8 @@
 const form = document.getElementById("cubic-form") as HTMLFormElement;
 const canvas = document.getElementById("graph") as HTMLCanvasElement;
 const ctx = canvas.getContext("2d");
-const centerX = canvas.width/2 + 5;
-const centerY = canvas.height/2 + 5;
+const centerX = canvas.width / 2 + 5;
+const centerY = canvas.height / 2 + 5;
 
 //roots
 let x1: any;
@@ -41,13 +41,25 @@ if (ctx) {
     ctx.stroke();
 }
 
+//transforms points to match scale of grid
+//when i = 5, (i-5)/30 - 10 (each major tick on grid)
+function translatePoint(point: any) {
+    return point * 30;
+}
+
 function drawFunction(x1: any, x2: any, x3: any, yInt: any) {
     if (ctx) {
         ctx.translate(centerX, centerY);
         ctx.beginPath();
-        ctx.arc(x1, 0, Math.abs(x2 - x1), 0, Math.PI);
+
+        let newX1 = translatePoint(x1);
+        let newX2 = translatePoint(x2);
+        let newX3 = translatePoint(x3);
+
+        //arc parameters: centerX... 
+        ctx.arc(newX1, 0, Math.abs(newX2 - newX1), 0, Math.PI);
         // ctx.arc(x2, 0, 50, 0, Math.PI);
-        ctx.stroke(); 
+        ctx.stroke();
     }
 }
 
