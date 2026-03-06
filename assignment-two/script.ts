@@ -1,34 +1,53 @@
 const form = document.getElementById("cubic-form") as HTMLFormElement;
+const canvas = document.getElementById("graph") as HTMLCanvasElement;
+const ctx = canvas.getContext("2d");
+const centerX = canvas.width/2 + 5;
+const centerY = canvas.height/2 + 5;
 
-//Roots
+//roots
 let x1: any;
 let x2: any;
 let x3: any;
 
-// grid components
-const canvas = document.getElementById("graph") as HTMLCanvasElement;
-const ctx = canvas.getContext("2d");
-
 if (ctx) {
+    //grid
     ctx.beginPath();
-    for (let i = 5; i <= canvas.width; i += 35) {
+    for (let i = 5; i <= canvas.width; i += 30) {
+
+        //vertical lines
         ctx.moveTo(i, 5);
         ctx.lineTo(i, canvas.height);
+
+        //horizontal lines
         ctx.moveTo(5, i);
-        ctx.lineTo(canvas.height, i);
+        ctx.lineTo(canvas.width, i);
+
         ctx.strokeStyle = "#AAAAAA";
         ctx.stroke();
     }
+
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+
+    //x-axis
+    ctx.moveTo(5, centerY);
+    ctx.lineTo(canvas.width, centerY);
+
+    //y-axis
+    ctx.moveTo(centerX, 5);
+    ctx.lineTo(centerX, canvas.height);
+
+    ctx.strokeStyle = "#443d80";
+    ctx.stroke();
 }
 
 function drawFunction(x1: any, x2: any, x3: any, yInt: any) {
     if (ctx) {
-        ctx.translate(canvas.width/2, canvas.height/2);
+        ctx.translate(centerX, centerY);
         ctx.beginPath();
-        ctx.moveTo(0, yInt);
-        ctx.bezierCurveTo(x1, 0, 180, 10, x2, 0);
-        ctx.strokeStyle = "#362c47";
-        ctx.stroke();
+        ctx.arc(x1, 0, Math.abs(x2 - x1), 0, Math.PI);
+        // ctx.arc(x2, 0, 50, 0, Math.PI);
+        ctx.stroke(); 
     }
 }
 
