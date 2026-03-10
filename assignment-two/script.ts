@@ -1,30 +1,30 @@
 const form = document.getElementById("cubic-form") as HTMLFormElement;
 const canvas = document.getElementById("graph") as HTMLCanvasElement;
 const ctx = canvas.getContext("2d");
-const centerX = canvas.width / 2 + 5;
-const centerY = canvas.height / 2 + 5;
-const gridSize = 20;
+const centerX = canvas.width / 2;
+const centerY = canvas.height / 2;
+const gridSize = 25;
 
 function drawGrid() {
     if (ctx) {
         ctx.beginPath();
-        for (let i = 5; i <= canvas.width; i += gridSize) {
-            ctx.moveTo(i, 5);
+        ctx.strokeStyle = "#cde8f5";
+        for (let i = 0; i <= canvas.width; i += gridSize) {
+            ctx.moveTo(i, 0);
             ctx.lineTo(i, canvas.height);
-            ctx.moveTo(5, i);
+            ctx.moveTo(0, i);
             ctx.lineTo(canvas.width, i);
-            ctx.strokeStyle = "#cde8f5";
             ctx.stroke();
         }
 
         //x- and y- axis
         ctx.beginPath();
-        ctx.moveTo(5, centerY);
-        ctx.lineTo(canvas.width, centerY);
-        ctx.moveTo(centerX, 5);
-        ctx.lineTo(centerX, canvas.height);
         ctx.strokeStyle = "#3c8dbc";
         ctx.lineWidth = 2;
+        ctx.moveTo(0, centerY);
+        ctx.lineTo(canvas.width, centerY);
+        ctx.moveTo(centerX, 0);
+        ctx.lineTo(centerX, canvas.height);
         ctx.stroke();
     }
 }
@@ -33,23 +33,22 @@ function drawFunction(a: number, b: number, c: number, d: number, roots: any[]) 
     if (ctx) {
         ctx.translate(centerX, centerY);
         ctx.beginPath();
+        ctx.strokeStyle = "#f37f73";
+        ctx.lineWidth = 2;
 
-        for (let x = -15; x <= 15; x += 0.01) {
+        for (let x = -15; x <= 15; x += 0.1) {
             const y = -(a * x ** 3 + b * x ** 2 + c * x + d);
             ctx.lineTo(x * gridSize, y * gridSize);
-            // x === -centerX ? ctx.moveTo(x * gridSize, y * gridSize) : ctx.lineTo(x * gridSize, y * gridSize);
-            ctx.strokeStyle = "#f37f73";
-            ctx.lineWidth = 2;
             ctx.stroke();
         }
 
-        ctx.beginPath();
-
         //draws a dot around each real root
+        ctx.beginPath();
+        ctx.fillStyle = "#ffd24f";
+
         for (let i = 0; i < roots.length; i++) {
             ctx.moveTo(roots[i] * gridSize, 0);
             ctx.arc(roots[i] * gridSize, 0, 3, 0, 2 * Math.PI);
-            ctx.fillStyle = "#ffd24f";
             ctx.fill();
             ctx.stroke();
         }
@@ -89,43 +88,34 @@ form?.addEventListener("submit", (event) => {
     if (discriminant < 0) {
         //three disctinct roots
         const k = 2 * Math.sqrt(-p / 3);
-        const theta = Math.acos(-q / (2 * Math.sqrt(-1 * ((p / 3) ** 3)))) / 3;
+        const theta = Math.acos(-q / (2 * Math.sqrt(-((p / 3) ** 3)))) / 3;
         x1 = k * Math.cos(theta) - b / (3 * a);
         x2 = k * Math.cos(theta + (2 * Math.PI) / 3) - b / (3 * a);
         x3 = k * Math.cos(theta + (4 * Math.PI / 3)) - b / (3 * a);
         roots = [x1, x2, x3];
-
-        //delete this line once done testing
-        (document.getElementById("result") as HTMLInputElement).value = `x1=${x1}, x2=${x2}, x3=${x3}`;
     } else if (discriminant > 0) {
-        x1 = (-q / 2 + Math.sqrt((q / 2) ** 2 + (p / 3) ** 3)) ** (1 / 3);
-        x2 = (-q / 2 - Math.sqrt((q / 2) ** 2 + (p / 3) ** 3)) ** (1 / 3);
+        x1 = Math.cbrt(-q / 2 + Math.sqrt(discriminant));
+        x2 = Math.cbrt(-q / 2 - Math.sqrt(discriminant));
         x3 = x1 + x2 - b / (3 * a);
         roots = [x3];
-
-        (document.getElementById("x1") as HTMLInputElement).textContent = `${x1}`;
     } else {
-        if (p == q && p == 0) {
-            x1 = (-q / 2 + Math.sqrt((q / 2) ** 2 + (p / 3) ** 3)) ** 2 / 3 - b / (3 * a);
+        if (p == 0 && q == 0) {
+            //p = 0 and q = 0 so the original equation from above collapses into the equation below
+            x1 = - b / (3 * a);
             x2 = x1;
             x3 = x1;
             roots = [x1];
-
-            (document.getElementById("result") as HTMLInputElement).value = `x1=${x1}, x2=${x2}, x3=${x3}`;
         } else {
-            x1 = (p / 2) ** 1 / 3 - b / (3 * a);
-            x2 = (p / 2) ** 1 / 3 - b / (3 * a);
-            x3 = -2 * x1;
-            roots = [x1, x2, x3];
-
-            (document.getElementById("result") as HTMLInputElement).value = `x1=${x1}, x2=${x2}, x3=${x3}`;
+            x1 = Math.cbrt(q / 2) - b / (3 * a);
+            roots = [x1];
         }
     }
-    // (document.getElementById("p") as HTMLInputElement).textContent = `${p}`;
-    // (document.getElementById("discriminant") as HTMLInputElement).textContent = `${discriminant}`;
-    // (document.getElementById("x1") as HTMLInputElement).textContent = `${x1}`;
-    // (document.getElementById("x2") as HTMLInputElement).textContent = `${x2}`;
-    // (document.getElementById("x3") as HTMLInputElement).textContent = `${x3}`;
+    (document.getElementById("result") as HTMLInputElement).value = `x1=${x1}, x2=${x2}, x3=${x3}`;
+    //(document.getElementById("p") as HTMLInputElement).value = `${p}`;
+    // (document.getElementById("discriminant") as HTMLInputElement).value = `${discriminant}`;
+    // (document.getElementById("x1") as HTMLInputElement).value = `${x1}`;
+    // (document.getElementById("x2") as HTMLInputElement).value = `${x2}`;
+    // (document.getElementById("x3") as HTMLInputElement).value = `${x3}`;
 
     updateGraph(a, b, c, d, roots);
 })
