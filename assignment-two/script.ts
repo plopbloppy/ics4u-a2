@@ -11,27 +11,29 @@ let x2: any;
 let x3: any;
 
 //grid
-if (ctx) {
-    ctx.beginPath();
-    for (let i = 5; i <= canvas.width; i += gridSize) {
-        ctx.moveTo(i, 5);
-        ctx.lineTo(i, canvas.height);
-        ctx.moveTo(5, i);
-        ctx.lineTo(canvas.width, i);
-        ctx.strokeStyle = "#cde8f5";
+function drawGrid() {
+    if (ctx) {
+        ctx.beginPath();
+        for (let i = 5; i <= canvas.width; i += gridSize) {
+            ctx.moveTo(i, 5);
+            ctx.lineTo(i, canvas.height);
+            ctx.moveTo(5, i);
+            ctx.lineTo(canvas.width, i);
+            ctx.strokeStyle = "#cde8f5";
+            ctx.stroke();
+        }
+
+        //x- and y- axis
+        ctx.beginPath();
+        ctx.moveTo(5, centerY);
+        ctx.lineTo(canvas.width, centerY);
+        ctx.moveTo(centerX, 5);
+        ctx.lineTo(centerX, canvas.height);
+
+        ctx.strokeStyle = "#3c8dbc";
+        ctx.lineWidth = 2;
         ctx.stroke();
     }
-
-    //x- and y- axis
-    ctx.beginPath();
-    ctx.moveTo(5, centerY);
-    ctx.lineTo(canvas.width, centerY);
-    ctx.moveTo(centerX, 5);
-    ctx.lineTo(centerX, canvas.height);
-
-    ctx.strokeStyle = "#3c8dbc";
-    ctx.lineWidth = 2;
-    ctx.stroke();
 }
 
 function drawFunction(a: number, b: number, c: number, d: number, x1: any, x2: any, x3: any) {
@@ -61,6 +63,17 @@ function drawFunction(a: number, b: number, c: number, d: number, x1: any, x2: a
         }
     }
 }
+
+function updateGraph(a: number, b: number, c: number, d: number, x1: any, x2: any, x3: any) {
+    if (ctx) {
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawGrid();
+        drawFunction(a, b, c, d, x1, x2, x3);
+    }
+}
+
+drawGrid();
 
 form?.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -107,5 +120,5 @@ form?.addEventListener("submit", (event) => {
             (document.getElementById("result") as HTMLInputElement).value = `x1=${x1}, x2=${x2}, x3=${x3}`;
         }
     }
-    drawFunction(a, b, c, d, x1, x2, x3);
+    updateGraph(a, b, c, d, x1, x2, x3);
 })
