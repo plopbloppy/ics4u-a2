@@ -78,7 +78,7 @@ form?.addEventListener("submit", (event) => {
 
     const p = (3 * a * c - b ** 2) / (3 * a ** 2);
     const q = (27 * a ** 2 * d - 9 * a * b * c + 2 * b ** 3) / (27 * a ** 3);
-    const discriminant = ((q / 2) ** 2 + (p / 3) ** 3);
+    const discriminant = Number(((q / 2) ** 2 + (p / 3) ** 3).toFixed(10));
     const theta = 1 / 3 * Math.acos(-q / (2 * Math.sqrt(-Math.pow(p / 3, 3))));
 
     let x1: any;
