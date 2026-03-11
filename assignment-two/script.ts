@@ -76,9 +76,10 @@ form?.addEventListener("submit", (event) => {
     const c: number = Number(formData.get("c"));
     const d: number = Number(formData.get("d"));
 
-    const p = (3 * a * c - b * b) / (3 * a * a);
-    const q = (27 * a * a * d - 9 * a * b * c + 2 * b ** 3) / (27 * a ** 3);
-    const discriminant = (q / 2) ** 2 + (p / 3) ** 3;
+    const p = (3 * a * c - b ** 2) / (3 * a ** 2);
+    const q = (27 * a ** 2 * d - 9 * a * b * c + 2 * b ** 3) / (27 * a ** 3);
+    const discriminant = ((q / 2) ** 2 + (p / 3) ** 3);
+    const theta = 1 / 3 * Math.acos(-q / (2 * Math.sqrt(-Math.pow(p / 3, 3))));
 
     let x1: any;
     let x2: any;
@@ -88,15 +89,14 @@ form?.addEventListener("submit", (event) => {
     if (discriminant < 0) {
         //three disctinct roots
         const k = 2 * Math.sqrt(-p / 3);
-        const theta = Math.acos(-q / (2 * Math.sqrt(-((p / 3) ** 3)))) / 3;
         x1 = k * Math.cos(theta) - b / (3 * a);
         x2 = k * Math.cos(theta + (2 * Math.PI) / 3) - b / (3 * a);
         x3 = k * Math.cos(theta + (4 * Math.PI / 3)) - b / (3 * a);
         realRoots = [x1, x2, x3];
 
-        (document.getElementById("x1") as HTMLElement).textContent = `${x1}`;
-        (document.getElementById("x2") as HTMLElement).textContent = `${x2}`;
-        (document.getElementById("x3") as HTMLElement).textContent = `${x3}`;
+        (document.getElementById("x1") as HTMLElement).textContent = `${x1.toFixed(2)}`;
+        (document.getElementById("x2") as HTMLElement).textContent = `${x2.toFixed(2)}`;
+        (document.getElementById("x3") as HTMLElement).textContent = `${x3.toFixed(2)}`;
     } else if (discriminant > 0) {
         //single root and two complex roots
         x1 = Math.cbrt(-q / 2 + Math.sqrt(discriminant));
@@ -106,7 +106,7 @@ form?.addEventListener("submit", (event) => {
 
         (document.getElementById("x1") as HTMLElement).textContent = `Complex Number`;
         (document.getElementById("x2") as HTMLElement).textContent = `Complex Number`;
-        (document.getElementById("x3") as HTMLElement).textContent = `${x3}`;
+        (document.getElementById("x3") as HTMLElement).textContent = `${x3.toFixed(2)}`;
     } else {
         if (p == 0 && q == 0) {
             //triple root
@@ -122,14 +122,15 @@ form?.addEventListener("submit", (event) => {
             x3 = -2 * r1 - b / (3 * a);;
             realRoots = [x1, x2, x3];
         }
-        (document.getElementById("x1") as HTMLElement).textContent = `${x1}`;
-        (document.getElementById("x2") as HTMLElement).textContent = `${x2}`;
-        (document.getElementById("x3") as HTMLElement).textContent = `${x3}`;
+        (document.getElementById("x1") as HTMLElement).textContent = `${x1.toFixed(2)}`;
+        (document.getElementById("x2") as HTMLElement).textContent = `${x2.toFixed(2)}`;
+        (document.getElementById("x3") as HTMLElement).textContent = `${x3.toFixed(2)}`;
     }
 
     (document.getElementById("equation") as HTMLElement).textContent = `${a}x³ + ${b}x² + ${c}x + ${d}`;
-    (document.getElementById("p") as HTMLElement).textContent = `${p}`;
-    (document.getElementById("discriminant") as HTMLElement).textContent = `${discriminant}`;
+    (document.getElementById("p") as HTMLElement).textContent = `${p.toFixed(5)}`;
+    (document.getElementById("q") as HTMLElement).textContent = `${q.toFixed(5)}`;
+    (document.getElementById("discriminant") as HTMLElement).textContent = `${discriminant.toFixed(5)}`;
 
     updateGraph(a, b, c, d, realRoots);
 })
